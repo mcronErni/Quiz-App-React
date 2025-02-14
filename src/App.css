@@ -1,4 +1,4 @@
-#root {
+/* #root {
   max-width: 1280px;
   margin: 0 auto;
   padding: 2rem;
@@ -40,3 +40,27 @@
 .read-the-docs {
   color: #888;
 }
+
+.quiz-cards-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.quiz-card {
+  border: 1px solid #ccc;
+  padding: 16px;
+  border-radius: 8px;
+  width: 200px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.quiz-card h3 {
+  margin: 0;
+  font-size: 1.2em;
+}
+
+.quiz-card p {
+  margin: 8px 0 0;
+  color: #666;
+} */
