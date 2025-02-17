@@ -4,15 +4,29 @@ import InputField from '../components/InputField';
 import Button from '../components/Button';
 import CreateQuizCard from '../components/CreateQuizCard';
 import axios from 'axios';
+import Cookies from 'js-cookie';
 
 const CreateQuiz = () => {
   const [showModal, setShowModal] = useState(false);
   const [quizData, setQuizData] = useState({
     quizTitle: '',
     totalScore: 0,
-    mentorId : 1, //CHANGE THIS AFTER AUTHENTICATION
+    mentorId : 0, //CHANGE THIS AFTER AUTHENTICATION
     questions: [],
   });
+
+  useEffect(() => {
+    // Get mentorId from cookies
+    const mentorIdFromCookie = Cookies.get('mentorId');
+
+    // If mentorId is found in cookies, update quizData state
+    if (mentorIdFromCookie) {
+      setQuizData(prevState => ({
+        ...prevState,
+        mentorId: mentorIdFromCookie, // Set the mentorId from the cookie
+      }));
+    }
+  }, []);
 
   const [questionCount, setQuestionCount] = useState(0);
 
@@ -42,6 +56,7 @@ const CreateQuiz = () => {
     setQuizData({
       ...quizData,
       questions: newQuestions,
+      totalScore: count
     });
   
     setQuestionCount(count);
@@ -53,12 +68,12 @@ const CreateQuiz = () => {
     setQuizData({ ...quizData, questions: updatedQuestions });
   };
 
-  const handleScoreChange = (index, score) => {
-    const updatedQuestions = [...quizData.questions];
-    updatedQuestions[index].score = parseInt(score);
-    const totalScore = updatedQuestions.reduce((acc, q) => acc + q.score, 0);
-    setQuizData({ ...quizData, questions: updatedQuestions, totalScore });
-  };
+  // const handleScoreChange = (index, score) => {
+  //   const updatedQuestions = [...quizData.questions];
+  //   updatedQuestions[index].score = parseInt(score);
+  //   const totalScore = updatedQuestions.reduce((acc, q) => acc + q.score, 0);
+  //   setQuizData({ ...quizData, questions: updatedQuestions, totalScore });
+  // };
 
   const handleChoiceChange = (index, value, choiceIndex) => {
     const updatedQuestions = [...quizData.questions];
@@ -121,7 +136,7 @@ const CreateQuiz = () => {
         onChange={handleQuestionCountChange}
       />
       <div className="mt-4">
-        <label className="block text-lg font-semibold">Total Score: {quizData.totalScore}</label>
+        <label className="block text-lg font-semibold">Total Score: {quizData.questions.length}</label>
       </div>
       {quizData.questions.map((question, index) => (
         <CreateQuizCard
@@ -129,7 +144,7 @@ const CreateQuiz = () => {
           question={question}
           index={index}
           onChangeAnswer={handleAnswerChange}
-          onChangeScore={handleScoreChange}
+          // onChangeScore={handleScoreChange}
           onChangeChoice={handleChoiceChange}
           onChangeQuestion={handleQuestionChange}
         />

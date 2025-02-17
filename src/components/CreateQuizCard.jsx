@@ -86,7 +86,7 @@ const CreateQuizCard = ({ question, index, onChangeAnswer, onChangeScore, onChan
           Add Choice
         </button>
       </div>
-      <div className="mb-4">
+      {/* <div className="mb-4">
         <label className="block text-sm font-semibold">Score for this question</label>
         <input
           type="number"
@@ -94,7 +94,7 @@ const CreateQuizCard = ({ question, index, onChangeAnswer, onChangeScore, onChan
           onChange={(e) => onChangeScore(index, e.target.value)}
           className="mt-2 p-2 border border-gray-300 rounded-md w-full focus:ring-2 focus:ring-blue-500"
         />
-      </div>
+      </div> */}
     </div>
   );
 };
