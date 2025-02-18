@@ -12,7 +12,7 @@ export default function AvailableQuizzesCard({quiz, role, onClick}) {
         <h3 className="text-lg font-semibold text-gray-900">Score: {quiz.totalScore}</h3>
         <p className="text-sm text-gray-600 mt-2">ID: {quiz.quizId}</p>
         <Button label={"View"} navigateTo={`${quiz.quizId}`} />
-        <Button label={"Edit"} navigateTo={`edit/${quiz.quizId}`} />
+        <Button label={"Edit"} navigateTo={`/mentor/view-quiz/edit/${quiz.quizId}`} />
         <Button label={"Delete"} onClick={onClick} />
     </div>
   )

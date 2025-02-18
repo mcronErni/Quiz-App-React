@@ -5,8 +5,9 @@ import Button from '../components/Button';
 import CreateQuizCard from '../components/CreateQuizCard';
 import axios from 'axios';
 import Cookies from 'js-cookie';
+import { useParams, useNavigate } from 'react-router-dom';
 
-const CreateQuiz = () => {
+const EditQuiz = ({quiz}) => {
   const [showModal, setShowModal] = useState(false);
   const [quizData, setQuizData] = useState({
     quizTitle: '',
@@ -15,58 +16,86 @@ const CreateQuiz = () => {
     questions: [],
   });
 
-  const [mentorId, setMentorId] = useState(null);
 
+  const navigate = useNavigate();
+  const { id } = useParams();
+  const [mentorId, setMentorId] = useState(0);
+  //maybe i can use this to lock quizzes from other mentors?
   useEffect(() => {
     // Get mentorId from cookies
     const mentorIdFromCookie = Cookies.get('mentorId');
 
     // If mentorId is found in cookies, update quizData state
     if (mentorIdFromCookie) {
-      setQuizData(prevState => ({
-        ...prevState,
-        mentorId: mentorIdFromCookie, // Set the mentorId from the cookie
-      }));
-      setMentorId(mentorIdFromCookie);
+
+      setMentorId(parseInt(mentorIdFromCookie))
     }
   }, []);
 
-    const handleAddQuestion = () => {
-      setQuizData(prev => ({
-        ...prev,
-        questions: [...prev.questions, { mQuestion: '', answer: '', choices: [''], score: 0 }]
-      }));
-    };
-    
-    const [removedQuestions, setRemovedQuestions] = useState([]);
-    const handleRemoveQuestion = (index) => {
-      const updatedQuestions = [...quizData.questions];
-      const removedQuestion = updatedQuestions.splice(index, 1)[0]; // Remove question
-    
-      setQuizData({
-        ...quizData,
-        questions: updatedQuestions,
-      });
-    
-      setRemovedQuestions([...removedQuestions, removedQuestion]); // Store removed question
-    };
-    
-    const handleUndoRemove = () => {
-      if (removedQuestions.length === 0) return;
-    
-      const lastRemoved = removedQuestions.pop(); // Get last removed question
-      setQuizData({
-        ...quizData,
-        questions: [...quizData.questions, lastRemoved],
-      });
-    
-      setRemovedQuestions([...removedQuestions]); // Update state
-    };
+  useEffect(() => {
 
+    if(!mentorId) return;
+
+    const fetchData = async () =>{
+    //   setLoading(true);
+      try {
+        // const {data: response} = await axios.get('https://opentdb.com/api_category.php');
+        const {data: response} = await axios.get(`https://localhost:7034/api/quiz/${id}`);
+        console.log(response)
+
+        //check if mentor is the one who created thge quiz
+        if(parseInt(mentorId) != response.mentorId){
+            console.log("Current Mentor ID:",mentorId,"response: ",response.mentorId)
+            alert("You are not Authorized to edit this quiz.")
+            navigate(-1);
+            return
+        }
+        setQuizData(response);
+
+      } catch (error) {
+        console.error(error.message);
+      }
+    //   setLoading(false);
+    }
+
+    fetchData();
+  }, [mentorId]);
+
+  //ADD QUESTION USING ADD BUTTON 
+  const handleAddQuestion = () => {
+    setQuizData(prev => ({
+      ...prev,
+      questions: [...prev.questions, { mQuestion: '', answer: '', choices: [''], score: 0 }]
+    }));
+  };
+  
+  const [removedQuestions, setRemovedQuestions] = useState([]);
+  const handleRemoveQuestion = (index) => {
+    const updatedQuestions = [...quizData.questions];
+    const removedQuestion = updatedQuestions.splice(index, 1)[0]; // Remove question
+  
+    setQuizData({
+      ...quizData,
+      questions: updatedQuestions,
+    });
+  
+    setRemovedQuestions([...removedQuestions, removedQuestion]); // Store removed question
+  };
+  
+  const handleUndoRemove = () => {
+    if (removedQuestions.length === 0) return;
+  
+    const lastRemoved = removedQuestions.pop(); // Get last removed question
+    setQuizData({
+      ...quizData,
+      questions: [...quizData.questions, lastRemoved],
+    });
+  
+    setRemovedQuestions([...removedQuestions]); // Update state
+  };
   const handleQuizTitleChange = (e) => {
     setQuizData({ ...quizData, quizTitle: e.target.value });
   };
-
 
   const handleAnswerChange = (index, answer) => {
     const updatedQuestions = [...quizData.questions];
@@ -87,10 +116,6 @@ const CreateQuiz = () => {
   };
 
   const handleSubmit = async () => {
-
-    quizData.mentorId = mentorId;
-
-    quizData.totalScore = quizData.questions.length
     const isDefaultQuizData =
       quizData.quizTitle === '' ||
       quizData.totalScore === 0 ||
@@ -109,7 +134,7 @@ const CreateQuiz = () => {
     }
   
     try {
-      const { data: response } = await axios.post('https://localhost:7034/api/quiz', quizData);
+      const { data: response } = await axios.patch(`https://localhost:7034/api/quiz/${id}`, quizData);
       console.log(response);
       setShowModal(true)
     } catch (error) {
@@ -130,10 +155,16 @@ const CreateQuiz = () => {
 
   return (
     <div className="max-w-3xl mx-auto p-6 bg-gray-100 rounded-lg shadow-lg">
-      <h2 className="text-3xl font-semibold text-center mb-6">Create Quiz</h2>
+      <h2 className="text-3xl font-semibold text-center mb-6">Edit Quiz</h2>
       <InputField label="Quiz Title" type="text" value={quizData.quizTitle} onChange={handleQuizTitleChange} />
+      {/* <InputField
+        label="Number of Questions"
+        type="number"
+        value={questionCount}
+        onChange={handleQuestionCountChange}
+      /> */}
       <div className="mt-4">
-      <label className="block text-lg font-semibold">Total Score: {quizData.questions.length}</label>
+        <label className="block text-lg font-semibold">Total Score: {quizData.questions.length}</label>
         <Button label={"Add Question"} onClick={handleAddQuestion}/>
         <Button label={"Undo Remove"} onClick={handleUndoRemove}/>
       </div>
@@ -163,4 +194,4 @@ const CreateQuiz = () => {
   );
 };
 
-export default CreateQuiz;
+export default EditQuiz;

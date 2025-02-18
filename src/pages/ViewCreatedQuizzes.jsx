@@ -18,7 +18,7 @@ export default function ViewCreatedQuizzes() {
   //       </ul>
   //   </>
   // )
-    const [mentorId, setMentorId] = useState(null);
+    const [mentorId, setMentorId] = useState();
     useEffect(() => {
       // Get mentorId from cookies
       const mentorIdFromCookie = Cookies.get('mentorId');
@@ -31,12 +31,14 @@ export default function ViewCreatedQuizzes() {
 
   const [quizzes, setQuizzes] = useState([])
   useEffect(() => {
+    if(!mentorId) return
       const fetchData = async () =>{
       //   setLoading(true);
         try {
           // const {data: response} = await axios.get('https://opentdb.com/api_category.php');
-          const {data: response} = await axios.get(`https://localhost:7034/api/Mentor/${mentorId}`);
-          setQuizzes(response.quizzes);
+          const {data: response} = await axios.get(`https://localhost:7034/api/Quiz/Mentor/${mentorId}`);
+          console.log(response)
+          setQuizzes(response);
         } catch (error) {
           console.error(error.message);
         }

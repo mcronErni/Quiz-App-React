@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
+import Button from './Button';
 
-const CreateQuizCard = ({ question, index, onChangeAnswer, onChangeScore, onChangeChoice, onChangeQuestion }) => {
+const CreateQuizCard = ({ question, index, onChangeAnswer, handleRemoveQuestion, onChangeChoice, onChangeQuestion }) => {
   const [choices, setChoices] = useState(question.choices);
   
   const choiceRefs = useRef([]);
@@ -19,8 +20,15 @@ const CreateQuizCard = ({ question, index, onChangeAnswer, onChangeScore, onChan
   const handleAddChoice = () => {
     const updatedChoices = [...choices, ''];
     setChoices(updatedChoices);
+  
     onChangeChoice(index, updatedChoices[updatedChoices.length - 1], updatedChoices.length - 1);
-    choiceRefs.current[updatedChoices.length - 1].focus();
+  
+    // Delay focusing to ensure React has updated the DOM
+    setTimeout(() => {
+      if (choiceRefs.current[updatedChoices.length - 1]) {
+        choiceRefs.current[updatedChoices.length - 1].focus();
+      }
+    }, 0);
   };
 
   const handleDeleteChoice = (i) => {
@@ -86,15 +94,7 @@ const CreateQuizCard = ({ question, index, onChangeAnswer, onChangeScore, onChan
           Add Choice
         </button>
       </div>
-      {/* <div className="mb-4">
-        <label className="block text-sm font-semibold">Score for this question</label>
-        <input
-          type="number"
-          value={question.score}
-          onChange={(e) => onChangeScore(index, e.target.value)}
-          className="mt-2 p-2 border border-gray-300 rounded-md w-full focus:ring-2 focus:ring-blue-500"
-        />
-      </div> */}
+      <Button label={"❌ Delete"} onClick={() => handleRemoveQuestion(index)}/>
     </div>
   );
 };
