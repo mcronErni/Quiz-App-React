@@ -1,5 +1,8 @@
 import { useEffect, useState } from "react";
 import Button from "./Button";
+import axios from "axios";
+import { useParams } from "react-router-dom";
+import Cookies from "js-cookie";
 
 const QuizComponent = ({ quiz }) => {
   const [selectedChoices, setSelectedChoices] = useState({});
@@ -8,6 +11,7 @@ const QuizComponent = ({ quiz }) => {
   const [showModal, setShowModal] = useState(false);
   const passingScore = quiz.totalScore * 0.8;
   const [answeredQuestions, setAnsweredQuestions] = useState(0);
+  const { id } = useParams();
 
   const handleChoiceClick = (questionId, choice) => {
     if (!isSubmitted) {
@@ -41,13 +45,45 @@ const QuizComponent = ({ quiz }) => {
     }
   };
 
-  const handleSubmit = () => {
-    if(confirm(`Submit the Quiz? You have answered ${answeredQuestions}/${quiz.questions.length}`)){
-      setIsSubmitted(true);
-      setShowModal(true)
-      // alert(`You got ${correct}/${quiz.totalScore}`)
-    }
-  };
+    const [bootcamperId, setBootcamperId] = useState(0);
+    //maybe i can use this to lock quizzes from other mentors?
+    useEffect(() => {
+      // Get mentorId from cookies
+      const bootcamperIdFromCookie = Cookies.get('bootcamperId');
+  
+      // If mentorId is found in cookies, update quizData state
+      if (bootcamperIdFromCookie) {
+  
+        setBootcamperId(parseInt(bootcamperIdFromCookie))
+        console.log(bootcamperIdFromCookie)
+      }
+    }, []);
+
+    const handleSubmit = async () => {
+      if (confirm(`Submit the Quiz? You have answered ${answeredQuestions}/${quiz.questions.length}`)) {
+        try {
+          const response = await axios.post('https://localhost:7034/api/BootcamperQuiz', {
+            bootcamperId: bootcamperId,  // Ensure this is coming from state/cookies
+            quizId: id, // Ensure quiz ID is available
+            score: correct, // Replace with the actual score
+          });
+    
+          console.log('Submission successful:', response.data);
+          
+          setIsSubmitted(true);
+          setShowModal(true);
+        } catch (error) {
+          if (error.response?.status === 409) {
+            alert('You have already submitted this quiz.');
+          } else {
+            alert('There was an issue submitting your quiz. Please try again.');
+          }
+          console.log(error.response?.status)
+          console.error('Error submitting the exam:', error.response?.data || error.message);
+        }
+      }
+    };
+    
 
   useEffect(() => {
     if(showModal){

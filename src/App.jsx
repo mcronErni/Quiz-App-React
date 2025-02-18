@@ -13,13 +13,15 @@ import ViewCreatedQuizzes from './pages/ViewCreatedQuizzes';
 import PrivateRoute from "./layouts/PrivateRoute";
 import Register from "./pages/Register";
 import EditQuiz from "./pages/EditQuiz";
+import MentorViewQuiz from "./pages/MentorViewQuiz";
 
 function App() {
-  const { role, mentorName, bootcamperName, isAuthenticated, mentorId } = useSelector(state => state.auth);
+  const { role, mentorName, bootcamperName, isAuthenticated, mentorId, bootcamperId } = useSelector(state => state.auth);
 
   console.log("App User: ", role);
   console.log("Mentor Name: ", mentorName);
   console.log("Mentor Id: ", mentorId);
+  console.log("Bootcamper Id: ", bootcamperId);
   console.log("Bootcamper Name: ", bootcamperName);
   console.log("Is Authenticated: ", isAuthenticated);
 
@@ -45,6 +47,7 @@ function App() {
             <Route index element={<MentorDashboard />} />
             <Route path='create-quiz' element={<CreateQuiz />} />
             <Route path='view-quiz' element={<ViewCreatedQuizzes />} />
+            <Route path='view-quiz/:id' element={<MentorViewQuiz />} />
             <Route path='view-quiz/edit/:id' element={<EditQuiz />} />
           </Route>
         </Route>
