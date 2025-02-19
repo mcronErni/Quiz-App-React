@@ -51,14 +51,14 @@ export default function UserDashboard() {
       <div className="overflow-x-auto">
         <table className="w-full border border-gray-300 rounded-lg shadow-sm">
           <thead>
-            <tr className="bg-gray-100">
+            <tr className="bg-indigo-400">
               <th className="p-2 border">Quiz Title</th>
               <th className="p-2 border">Score / Total Score</th>
             </tr>
           </thead>
           <tbody>
             {quizzes.map((quiz, index) => (
-              <tr key={index} className="odd:bg-white even:bg-gray-50">
+              <tr key={index} className="odd:bg-indigo-100 even:bg-indigo-200">
                 <td className="p-2 border">{quiz.quizTitle}</td>
                 <td className="p-2 border">{quiz.score} / {quiz.totalScore}</td>
               </tr>

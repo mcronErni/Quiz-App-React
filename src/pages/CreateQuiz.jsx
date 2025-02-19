@@ -154,8 +154,8 @@ const CreateQuiz = () => {
               <div className="fixed inset-0 flex items-center justify-center text-center bg-black/80 backdrop-blur-sm">
                 <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full text-center">
                   <h2 className="text-2xl font-bold">Quiz Created</h2>
-                  </div>
                   <Button label={"Close"} onClick={() => setShowModal(false)}/>
+                  </div>
                 </div>
             )}
 

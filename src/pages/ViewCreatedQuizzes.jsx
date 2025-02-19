@@ -1,7 +1,7 @@
 import {React, useState, useEffect} from 'react'
 import Button from '../components/Button';
 import axios from 'axios';
-import { NavLink } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import AvailableQuizzesCard from '../components/AvailableQuizzesCard';
 import Cookies from 'js-cookie';
 
@@ -19,6 +19,7 @@ export default function ViewCreatedQuizzes() {
   //   </>
   // )
     const [mentorId, setMentorId] = useState();
+    const navigate = useNavigate();
     useEffect(() => {
       // Get mentorId from cookies
       const mentorIdFromCookie = Cookies.get('mentorId');
@@ -60,6 +61,7 @@ export default function ViewCreatedQuizzes() {
           if (!response.ok) {
             throw new Error("Delete failed");
           }
+          navigate(0)
         } catch (err) {
           setError(err.message);
         }

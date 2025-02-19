@@ -25,7 +25,7 @@ export default function AvailableQuizzes() {
     
     return (
       <>
-        <div className="p-6 items-center text-center">
+        <div className="p-6 bg-indigo items-center text-center">
           <Button label="Back" navigateTo="/user" />
           
           <div className="flex flex-wrap gap-4 mt-4 justify-center">
