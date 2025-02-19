@@ -25,7 +25,6 @@ const EditQuiz = ({quiz}) => {
     // Get mentorId from cookies
     const mentorIdFromCookie = Cookies.get('mentorId');
 
-    // If mentorId is found in cookies, update quizData state
     if (mentorIdFromCookie) {
 
       setMentorId(parseInt(mentorIdFromCookie))
@@ -72,26 +71,26 @@ const EditQuiz = ({quiz}) => {
   const [removedQuestions, setRemovedQuestions] = useState([]);
   const handleRemoveQuestion = (index) => {
     const updatedQuestions = [...quizData.questions];
-    const removedQuestion = updatedQuestions.splice(index, 1)[0]; // Remove question
+    const removedQuestion = updatedQuestions.splice(index, 1)[0];
   
     setQuizData({
       ...quizData,
       questions: updatedQuestions,
     });
   
-    setRemovedQuestions([...removedQuestions, removedQuestion]); // Store removed question
+    setRemovedQuestions([...removedQuestions, removedQuestion]);
   };
   
   const handleUndoRemove = () => {
     if (removedQuestions.length === 0) return;
   
-    const lastRemoved = removedQuestions.pop(); // Get last removed question
+    const lastRemoved = removedQuestions.pop();
     setQuizData({
       ...quizData,
       questions: [...quizData.questions, lastRemoved],
     });
   
-    setRemovedQuestions([...removedQuestions]); // Update state
+    setRemovedQuestions([...removedQuestions]);
   };
   const handleQuizTitleChange = (e) => {
     setQuizData({ ...quizData, quizTitle: e.target.value });
@@ -134,7 +133,7 @@ const EditQuiz = ({quiz}) => {
     }
   
     try {
-      const { data: response } = await axios.patch(`https://localhost:7034/api/quiz/${id}`, quizData);
+      const { data: response } = await axios.put(`https://localhost:7034/api/quiz/${id}`, quizData);
       console.log(response);
       setShowModal(true)
     } catch (error) {

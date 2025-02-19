@@ -11,21 +11,19 @@ const CreateQuiz = () => {
   const [quizData, setQuizData] = useState({
     quizTitle: '',
     totalScore: 0,
-    mentorId : 0, //CHANGE THIS AFTER AUTHENTICATION
+    mentorId : 0, //change after auth so I can save quiz with right user?
     questions: [],
   });
 
   const [mentorId, setMentorId] = useState(null);
 
   useEffect(() => {
-    // Get mentorId from cookies
     const mentorIdFromCookie = Cookies.get('mentorId');
 
-    // If mentorId is found in cookies, update quizData state
     if (mentorIdFromCookie) {
       setQuizData(prevState => ({
         ...prevState,
-        mentorId: mentorIdFromCookie, // Set the mentorId from the cookie
+        mentorId: mentorIdFromCookie,
       }));
       setMentorId(mentorIdFromCookie);
     }
@@ -41,14 +39,14 @@ const CreateQuiz = () => {
     const [removedQuestions, setRemovedQuestions] = useState([]);
     const handleRemoveQuestion = (index) => {
       const updatedQuestions = [...quizData.questions];
-      const removedQuestion = updatedQuestions.splice(index, 1)[0]; // Remove question
+      const removedQuestion = updatedQuestions.splice(index, 1)[0];
     
       setQuizData({
         ...quizData,
         questions: updatedQuestions,
       });
     
-      setRemovedQuestions([...removedQuestions, removedQuestion]); // Store removed question
+      setRemovedQuestions([...removedQuestions, removedQuestion]);
     };
     
     const handleUndoRemove = () => {
@@ -60,7 +58,7 @@ const CreateQuiz = () => {
         questions: [...quizData.questions, lastRemoved],
       });
     
-      setRemovedQuestions([...removedQuestions]); // Update state
+      setRemovedQuestions([...removedQuestions]);
     };
 
   const handleQuizTitleChange = (e) => {

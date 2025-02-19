@@ -48,10 +48,8 @@ const QuizComponent = ({ quiz }) => {
     const [bootcamperId, setBootcamperId] = useState(0);
     //maybe i can use this to lock quizzes from other mentors?
     useEffect(() => {
-      // Get mentorId from cookies
       const bootcamperIdFromCookie = Cookies.get('bootcamperId');
-  
-      // If mentorId is found in cookies, update quizData state
+
       if (bootcamperIdFromCookie) {
   
         setBootcamperId(parseInt(bootcamperIdFromCookie))
@@ -63,9 +61,9 @@ const QuizComponent = ({ quiz }) => {
       if (confirm(`Submit the Quiz? You have answered ${answeredQuestions}/${quiz.questions.length}`)) {
         try {
           const response = await axios.post('https://localhost:7034/api/BootcamperQuiz', {
-            bootcamperId: bootcamperId,  // Ensure this is coming from state/cookies
-            quizId: id, // Ensure quiz ID is available
-            score: correct, // Replace with the actual score
+            bootcamperId: bootcamperId,
+            quizId: id,
+            score: correct,
           });
     
           console.log('Submission successful:', response.data);

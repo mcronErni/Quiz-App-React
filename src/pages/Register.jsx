@@ -29,7 +29,6 @@ const Register = () => {
 
       const data = await response.json();
 
-      // You can dispatch login state here if needed
       // dispatch(login({ user: data.user, token: data.token }));
 
       navigate(role === "mentor" ? "/mentor" : "/user");

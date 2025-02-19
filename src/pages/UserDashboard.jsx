@@ -13,11 +13,10 @@ export default function UserDashboard() {
   const [bootcamperName, setBootcamperName] = useState(0);
   //maybe i can use this to lock quizzes from other mentors?
   useEffect(() => {
-    // Get mentorId from cookies
+
     const bootcamperIdFromCookie = Cookies.get('bootcamperId');
     const bootcamperNameFromCookie = Cookies.get('bootcamperName');
 
-    // If mentorId is found in cookies, update quizData state
     if (bootcamperIdFromCookie) {
 
       setBootcamperId(parseInt(bootcamperIdFromCookie))

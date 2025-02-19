@@ -23,7 +23,7 @@ const CreateQuizCard = ({ question, index, onChangeAnswer, handleRemoveQuestion,
   
     onChangeChoice(index, updatedChoices[updatedChoices.length - 1], updatedChoices.length - 1);
   
-    // Delay focusing to ensure React has updated the DOM
+
     setTimeout(() => {
       if (choiceRefs.current[updatedChoices.length - 1]) {
         choiceRefs.current[updatedChoices.length - 1].focus();
@@ -73,8 +73,8 @@ const CreateQuizCard = ({ question, index, onChangeAnswer, handleRemoveQuestion,
               type="text"
               value={choice}
               onChange={(e) => handleChoiceChange(e, i)}
-              onKeyDown={(e) => handleKeyDown(e, i)} // Handle key press event
-              ref={(el) => choiceRefs.current[i] = el} // Attach ref to each input
+              onKeyDown={(e) => handleKeyDown(e, i)}
+              ref={(el) => choiceRefs.current[i] = el}
               className="p-2 border border-gray-300 rounded-md w-full focus:ring-2 focus:ring-blue-500"
             />
             <button

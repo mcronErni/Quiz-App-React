@@ -21,10 +21,8 @@ export default function ViewCreatedQuizzes() {
     const [mentorId, setMentorId] = useState();
     const navigate = useNavigate();
     useEffect(() => {
-      // Get mentorId from cookies
       const mentorIdFromCookie = Cookies.get('mentorId');
       console.log('MENTORID', mentorIdFromCookie)
-      // If mentorId is found in cookies, update quizData state
       if (mentorIdFromCookie) {
         setMentorId(mentorIdFromCookie)
       }

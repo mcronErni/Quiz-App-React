@@ -10,15 +10,15 @@ const Logout = () => {
     try {
       const response = await fetch("https://localhost:7034/api/Auth/logout", {
         method: "POST",
-        credentials: "include", // Important for cookies
+        credentials: "include",
       });
 
       if (!response.ok) {
         throw new Error("Logout failed");
       }
 
-      dispatch(logout()); // Clear the user state in Redux
-      navigate("/"); // Redirect to login page after logout
+      dispatch(logout());
+      navigate("/");
     } catch (err) {
       console.error("Logout error:", err.message);
     }

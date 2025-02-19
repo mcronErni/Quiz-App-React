@@ -7,7 +7,7 @@ const initialState = {
   bootcamperId: Cookies.get("bootcamperId") || null,
   mentorName: Cookies.get("mentorName") || null,
   bootcamperName: Cookies.get("bootcamperName") || null,
-  isAuthenticated: !!Cookies.get("role"), // Use role to determine authentication
+  isAuthenticated: !!Cookies.get("role"),
 };
 
 const authSlice = createSlice({
@@ -30,7 +30,6 @@ const authSlice = createSlice({
       state.bootcamperName = null;
       state.isAuthenticated = false;
 
-      // Remove cookies manually (JWT will auto-expire)
       Cookies.remove("role");
       Cookies.remove("mentorId");
       Cookies.remove("bootcamperId");
