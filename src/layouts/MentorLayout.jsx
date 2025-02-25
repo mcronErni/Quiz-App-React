@@ -1,33 +1,48 @@
-import {React, useState, useRef, useEffect} from 'react'
-import { BrowserRouter, Routes, Route, Outlet, NavLink, useNavigate } from "react-router-dom";
-import Button from '../components/Button'
-import { useDispatch, useSelector } from 'react-redux';
+import React from 'react';
+import { Outlet, useNavigate } from "react-router-dom";
+import Button from '../components/Button';
+import { useDispatch } from 'react-redux';
 import { logout } from '../redux/authSlice';
 import Logout from '../components/Logout';
+import { motion } from 'framer-motion';
 
 export default function MentorLayout() {
-    const dispatch = useDispatch();
-    const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  
+  const handleLogout = () => {
+    dispatch(logout());
+    navigate("/");
+  };
 
-
-    const handleLogout = () => {
-        dispatch(logout());
-        navigate("/")
-    }
-return (
-    <div className="w-screen h-screen">
-        <header className="bg-gray-900 text-white px-6 py-4 flex justify-between items-center shadow-md">
-                <h1 className="text-xl font-semibold">Mentor Dashboard</h1>
-                <nav className="flex gap-4">
-                <Button label={"Create Quiz"} navigateTo={"create-quiz"} />
-                <Button label={"View Quizzes"} navigateTo={"view-quiz"} />
-                {/* <Button label={"Logout"} onClick={handleLogout} /> */}
-                <Logout/>
-                </nav>
-        </header>
-        <main className="p-6">
-            <Outlet />
-        </main>
+  return (
+    <div className="min-h-screen bg-gray-50">
+      <header className="bg-gradient-to-r from-indigo-800 to-indigo-600 text-white px-6 py-4 shadow-lg">
+        <div className="max-w-7xl mx-auto flex justify-between items-center">
+          <motion.h1 
+            className="text-2xl font-bold"
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            Mentor Dashboard
+          </motion.h1>
+          <nav className="flex gap-3">
+            <Button label="Create Quiz" navigateTo="create-quiz" variant="secondary" />
+            <Button label="View Quizzes" navigateTo="view-quiz" variant="secondary" />
+            <Logout />
+          </nav>
+        </div>
+      </header>
+      <main className="max-w-7xl mx-auto p-6">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          <Outlet />
+        </motion.div>
+      </main>
     </div>
-    )
+  );
 }
