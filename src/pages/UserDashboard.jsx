@@ -11,24 +11,32 @@ export default function UserDashboard() {
 
   const [bootcamperId, setBootcamperId] = useState(0);
   const [bootcamperName, setBootcamperName] = useState(0);
+  const [jwtToken, setJwtToken] = useState(null);
   //maybe i can use this to lock quizzes from other mentors?
   useEffect(() => {
 
     const bootcamperIdFromCookie = Cookies.get('bootcamperId');
     const bootcamperNameFromCookie = Cookies.get('bootcamperName');
+    const jwt = Cookies.get('jwt')
 
     if (bootcamperIdFromCookie) {
 
       setBootcamperId(parseInt(bootcamperIdFromCookie))
       setBootcamperName(bootcamperNameFromCookie)
+      setJwtToken(jwt);
       console.log(bootcamperIdFromCookie)
     }
   }, []);
 
   useEffect(() => {
+    if(!jwtToken){
+      return
+    }
     const fetchData = async () => {
       try {
-        const { data } = await axios.get(`https://localhost:7034/api/BootcamperQuiz/bootcamper/${bootcamperId}`);
+        const { data } = await axios.get(`https://localhost:7034/api/BootcamperQuiz/bootcamper/${bootcamperId}`,{
+          headers: { Authorization: `Bearer ${jwtToken}` }
+        });
         setQuizzes(data);
         console.log(data)
       } catch (err) {
@@ -38,12 +46,12 @@ export default function UserDashboard() {
       }
     };
     fetchData();
-  }, [bootcamperId]);
+  }, [jwtToken]);
+
 
   if (loading) return <p className="text-center text-gray-500">Loading...</p>;
   if (error) return <p className="text-center text-red-500">{error}</p>;
   if (quizzes.length === 0) return <p className="text-center text-gray-500">No quizzes found.</p>;
-
   return (
     <div className="max-w-4xl mx-auto p-4">
       <h2 className="text-xl font-bold text-center mb-4">{bootcamperName}'s Quizzes</h2>

@@ -34,6 +34,7 @@ const Login = () => {
       Cookies.set("bootcamperId", data.bootcamperId || null);
       Cookies.set("mentorName", data.mentorName || null);
       Cookies.set("bootcamperName", data.bootcamperName || null);
+      Cookies.set("jwt", data.jwt);
 
       dispatch(login());
 

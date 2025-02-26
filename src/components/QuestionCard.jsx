@@ -64,6 +64,7 @@ const QuizComponent = ({ quiz }) => {
             bootcamperId: bootcamperId,
             quizId: id,
             score: correct,
+            withCredentials: true
           });
     
           console.log('Submission successful:', response.data);
