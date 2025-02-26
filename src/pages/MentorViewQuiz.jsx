@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
+import Cookies from 'js-cookie';
 
 export default function MentorViewQuiz() {
   const [quizzes, setQuizzes] = useState([]);
@@ -10,10 +11,19 @@ export default function MentorViewQuiz() {
   const [sortConfig, setSortConfig] = useState({ key: null, direction: 'ascending' });
   const { id } = useParams();
 
+  const [jwtToken, setJwt] = useState(null);
   useEffect(() => {
+    const jwt = Cookies.get('jwt')
+    setJwt(jwt);
+  }, []);
+
+  useEffect(() => {
+    if(!jwtToken) return
     const fetchData = async () => {
       try {
-        const { data } = await axios.get(`https://localhost:7034/api/BootcamperQuiz/${id}`);
+        const { data } = await axios.get(`https://localhost:7034/api/BootcamperQuiz/${id}`,{
+          headers: { Authorization: `Bearer ${jwtToken}` }
+        });
         setQuizzes(data);
       } catch (err) {
         setError('Failed to fetch quizzes');
@@ -23,7 +33,7 @@ export default function MentorViewQuiz() {
       }
     };
     fetchData();
-  }, [id]); // Added id to dependency array
+  }, [id, jwtToken]); // Added id to dependency array
 
   const handleSort = (key) => {
     let direction = 'ascending';

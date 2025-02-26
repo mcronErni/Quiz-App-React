@@ -21,11 +21,14 @@ const QuizComponent = ({ quiz }) => {
   const progressPercentage = (answeredQuestions / quiz.questions.length) * 100;
 
   const [bootcamperId, setBootcamperId] = useState(0);
+  const [jwtToken, setJwt] = useState(null)
 
   useEffect(() => {
     const bootcamperIdFromCookie = Cookies.get('bootcamperId');
+    const jwt = Cookies.get('jwt');
     if (bootcamperIdFromCookie) {
       setBootcamperId(parseInt(bootcamperIdFromCookie));
+      setJwt(jwt);
     }
   }, []);
 
@@ -63,6 +66,7 @@ const QuizComponent = ({ quiz }) => {
 
   const handleSubmit = async () => {
     // Using window.confirm for better browser compatibility
+    console.log(jwtToken)
     if (window.confirm(`Submit the Quiz? You have answered ${answeredQuestions}/${quiz.questions.length}`)) {
       setSubmitting(true);
       setError("");
@@ -72,7 +76,7 @@ const QuizComponent = ({ quiz }) => {
           bootcamperId: bootcamperId,
           quizId: id,
           score: correct,
-          withCredentials: true
+          headers: { Authorization: `Bearer ${jwtToken}` }
         });
   
         setIsSubmitted(true);

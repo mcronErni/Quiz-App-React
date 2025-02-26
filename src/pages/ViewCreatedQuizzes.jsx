@@ -28,14 +28,22 @@ export default function ViewCreatedQuizzes() {
       }
     }, []);
 
+    const [jwtToken, setJwt] = useState(null);
+    useEffect(() => {
+      const jwt = Cookies.get('jwt')
+      setJwt(jwt);
+    }, []);
+
   const [quizzes, setQuizzes] = useState([])
   useEffect(() => {
-    if(!mentorId) return
+    if(!mentorId || !jwtToken) return
       const fetchData = async () =>{
       //   setLoading(true);
         try {
           // const {data: response} = await axios.get('https://opentdb.com/api_category.php');
-          const {data: response} = await axios.get(`https://localhost:7034/api/Quiz/Mentor/${mentorId}`);
+          const {data: response} = await axios.get(`https://localhost:7034/api/Quiz/Mentor/${mentorId}`,{
+            headers: { Authorization: `Bearer ${jwtToken}` }
+          });
           console.log(response)
           setQuizzes(response);
         } catch (error) {
@@ -45,7 +53,7 @@ export default function ViewCreatedQuizzes() {
       }
   
       fetchData();
-    }, [mentorId]);
+    }, [mentorId, jwtToken]);
 
     const handleDelete = async (quizId) => {
       console.log(quizId)

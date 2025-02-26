@@ -4,17 +4,29 @@ import AvailableQuizzesCard from '../components/AvailableQuizzesCard';
 import { NavLink } from 'react-router-dom';
 import Button from '../components/Button';
 import { motion } from 'framer-motion';
+import Cookies from 'js-cookie';
 
 export default function AvailableQuizzes() {
   const [quizzes, setQuizzes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [jwtToken, setJwt] = useState(null);
 
+    useEffect(() => {
+      const jwt = Cookies.get('jwt')
+      setJwt(jwt);
+    }, []);
   useEffect(() => {
+    if(!jwtToken){
+      return
+    }
     const fetchData = async () => {
       setLoading(true);
       try {
-        const { data: response } = await axios.get('https://localhost:7034/api/quiz');
+        console.log(jwtToken)
+        const { data: response } = await axios.get('https://localhost:7034/api/quiz', {
+          headers: { Authorization: `Bearer ${jwtToken}` }
+        });
         setQuizzes(response);
       } catch (error) {
         setError(error.message);
@@ -24,7 +36,7 @@ export default function AvailableQuizzes() {
       }
     };
     fetchData();
-  }, []);
+  }, [jwtToken]);
 
   if (loading) {
     return (

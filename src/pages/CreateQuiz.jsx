@@ -32,6 +32,13 @@ const CreateQuiz = () => {
     }
   }, []);
 
+  const [jwtToken, setJwt] = useState(null);
+
+    useEffect(() => {
+      const jwt = Cookies.get('jwt')
+      setJwt(jwt);
+    }, []);
+
   const handleAddQuestion = () => {
     setQuizData(prev => ({
       ...prev,
@@ -132,6 +139,9 @@ const CreateQuiz = () => {
   };
 
   const handleSubmit = async () => {
+    if(!jwtToken){
+      return
+    }
     setError('');
     
     // Update total score based on question count
@@ -147,7 +157,9 @@ const CreateQuiz = () => {
     setIsSubmitting(true);
     
     try {
-      const { data: response } = await axios.post('https://localhost:7034/api/quiz', updatedQuizData);
+      const { data: response } = await axios.post('https://localhost:7034/api/quiz', updatedQuizData,{
+        headers: { Authorization: `Bearer ${jwtToken}` }
+      });
       console.log(response);
       setShowModal(true);
     } catch (error) {

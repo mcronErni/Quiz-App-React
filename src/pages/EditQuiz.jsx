@@ -31,15 +31,23 @@ const EditQuiz = ({quiz}) => {
     }
   }, []);
 
+    const [jwtToken, setJwt] = useState(null);
+    useEffect(() => {
+      const jwt = Cookies.get('jwt')
+      setJwt(jwt);
+    }, []);
+
   useEffect(() => {
 
-    if(!mentorId) return;
+    if(!mentorId || !jwtToken) return;
 
     const fetchData = async () =>{
     //   setLoading(true);
       try {
         // const {data: response} = await axios.get('https://opentdb.com/api_category.php');
-        const {data: response} = await axios.get(`https://localhost:7034/api/quiz/${id}`);
+        const {data: response} = await axios.get(`https://localhost:7034/api/quiz/${id}`,{
+          headers: { Authorization: `Bearer ${jwtToken}` }
+        });
         console.log(response)
 
         //check if mentor is the one who created thge quiz
@@ -58,7 +66,7 @@ const EditQuiz = ({quiz}) => {
     }
 
     fetchData();
-  }, [mentorId]);
+  }, [mentorId, jwtToken]);
 
   //ADD QUESTION USING ADD BUTTON 
   const handleAddQuestion = () => {

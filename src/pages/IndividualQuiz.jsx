@@ -4,6 +4,7 @@ import axios from "axios";
 import QuestionCard from "../components/QuestionCard";
 import Button from "../components/Button";
 import { motion } from "framer-motion";
+import Cookies from "js-cookie";
 
 export default function IndividualQuiz() {
   const navigate = useNavigate();
@@ -12,11 +13,20 @@ export default function IndividualQuiz() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
 
+    const [jwtToken, setJwt] = useState(null);
+    useEffect(() => {
+      const jwt = Cookies.get('jwt')
+      setJwt(jwt);
+    }, []);
+
   useEffect(() => {
+    if(!jwtToken)  return
     const fetchData = async () => {
       try {
         const { data: response } = await axios.get(
-          `https://localhost:7034/api/quiz/${id}`
+          `https://localhost:7034/api/quiz/${id}`,{
+            headers: { Authorization: `Bearer ${jwtToken}` }
+          }
         );
         setItems(response);
       } catch (error) {
@@ -27,7 +37,7 @@ export default function IndividualQuiz() {
       }
     };
     fetchData();
-  }, [id]);
+  }, [id, jwtToken]);
 
   function handleCancel() {
     if (window.confirm("Are you sure you want to cancel?")) {
