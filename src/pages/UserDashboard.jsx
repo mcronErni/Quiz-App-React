@@ -9,6 +9,7 @@ export default function UserDashboard() {
   const [error, setError] = useState(null);
   const [bootcamperId, setBootcamperId] = useState(0);
   const [bootcamperName, setBootcamperName] = useState('');
+  const [jwtToken, setJwtToken] = useState(null);
   const [stats, setStats] = useState({
     totalQuizzes: 0,
     averageScore: 0,
@@ -20,19 +21,29 @@ export default function UserDashboard() {
   useEffect(() => {
     const bootcamperIdFromCookie = Cookies.get('bootcamperId');
     const bootcamperNameFromCookie = Cookies.get('bootcamperName');
+    const jwt = Cookies.get('jwt')
+
     if (bootcamperIdFromCookie) {
-      setBootcamperId(parseInt(bootcamperIdFromCookie));
-      setBootcamperName(bootcamperNameFromCookie || 'Bootcamper');
+
+      setBootcamperId(parseInt(bootcamperIdFromCookie))
+      setBootcamperName(bootcamperNameFromCookie)
+      setJwtToken(jwt);
+      console.log(bootcamperIdFromCookie)
     }
   }, []);
 
   // Fetch quizzes when bootcamperId changes
   useEffect(() => {
+    if(!jwtToken){
+      return
+    }
     const fetchData = async () => {
       if (bootcamperId === 0) return;
       
       try {
-        const { data } = await axios.get(`https://localhost:7034/api/BootcamperQuiz/bootcamper/${bootcamperId}`);
+        const { data } = await axios.get(`https://localhost:7034/api/BootcamperQuiz/bootcamper/${bootcamperId}`,{
+          headers: { Authorization: `Bearer ${jwtToken}` }
+        });
         setQuizzes(data);
         calculateStats(data);
       } catch (err) {
@@ -44,7 +55,8 @@ export default function UserDashboard() {
     };
     
     fetchData();
-  }, [bootcamperId]);
+  }, [jwtToken]);
+
 
   // Calculate dashboard statistics
   const calculateStats = (quizData) => {

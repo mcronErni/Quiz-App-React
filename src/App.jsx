@@ -16,7 +16,7 @@ import EditQuiz from "./pages/EditQuiz";
 import MentorViewQuiz from "./pages/MentorViewQuiz";
 
 function App() {
-  const { role, mentorName, bootcamperName, isAuthenticated, mentorId, bootcamperId } = useSelector(state => state.auth);
+  const { role, mentorName, bootcamperName, isAuthenticated, mentorId, bootcamperId, jwt } = useSelector(state => state.auth);
 
   console.log("App User: ", role);
   console.log("Mentor Name: ", mentorName);
@@ -24,6 +24,7 @@ function App() {
   console.log("Bootcamper Id: ", bootcamperId);
   console.log("Bootcamper Name: ", bootcamperName);
   console.log("Is Authenticated: ", isAuthenticated);
+  console.log("TOKEN: ", jwt);
 
   return (
     <BrowserRouter>

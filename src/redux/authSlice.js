@@ -8,6 +8,7 @@ const initialState = {
   mentorName: Cookies.get("mentorName") || null,
   bootcamperName: Cookies.get("bootcamperName") || null,
   isAuthenticated: !!Cookies.get("role"),
+  jwt: Cookies.get("jwt") || null
 };
 
 const authSlice = createSlice({
@@ -21,6 +22,7 @@ const authSlice = createSlice({
       state.mentorName = Cookies.get("mentorName") || null;
       state.bootcamperName = Cookies.get("bootcamperName") || null;
       state.isAuthenticated = !!state.role;
+      state.jwt = Cookies.get("jwt");
     },
     logout: (state) => {
       state.role = null;
@@ -29,12 +31,14 @@ const authSlice = createSlice({
       state.mentorName = null;
       state.bootcamperName = null;
       state.isAuthenticated = false;
+      state.jwt = null;
 
       Cookies.remove("role");
       Cookies.remove("mentorId");
       Cookies.remove("bootcamperId");
       Cookies.remove("mentorName");
       Cookies.remove("bootcamperName");
+      Cookies.remove("jwt");
     },
   },
 });

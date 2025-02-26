@@ -72,6 +72,7 @@ const QuizComponent = ({ quiz }) => {
           bootcamperId: bootcamperId,
           quizId: id,
           score: correct,
+          withCredentials: true
         });
   
         setIsSubmitted(true);
