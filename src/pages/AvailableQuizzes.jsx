@@ -12,10 +12,10 @@ export default function AvailableQuizzes() {
   const [error, setError] = useState(null);
   const [jwtToken, setJwt] = useState(null);
 
-    useEffect(() => {
-      const jwt = Cookies.get('jwt')
-      setJwt(jwt);
-    }, []);
+  useEffect(() => {
+    const jwt = Cookies.get('jwt')
+    setJwt(jwt);
+  }, []);
   useEffect(() => {
     if(!jwtToken){
       return

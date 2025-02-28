@@ -13,11 +13,11 @@ export default function IndividualQuiz() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
 
-    const [jwtToken, setJwt] = useState(null);
-    useEffect(() => {
-      const jwt = Cookies.get('jwt')
-      setJwt(jwt);
-    }, []);
+  const [jwtToken, setJwt] = useState(null);
+  useEffect(() => {
+    const jwt = Cookies.get('jwt')
+    setJwt(jwt);
+  }, []);
 
   useEffect(() => {
     if(!jwtToken)  return
